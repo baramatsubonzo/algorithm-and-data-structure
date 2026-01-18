@@ -1,0 +1,67 @@
+class KthLargest
+  def initialize(k, nums)
+    @k = k
+    @heap = []
+    nums.each { |n| add(n)}
+  end
+
+  def add(val)
+    if @heap.size < @k
+      push_heap(val)
+    elsif val > @heap[0]
+      pop_heap
+      push_heap(val)
+    end
+    @heap[0]
+  end
+
+  private
+  def push_heap(val)
+    @heap << val
+    idx = @heap.size - 1
+    while idx > 0
+      parent = (idx - 1) / 2
+      break if @heap[parent] <= @heap[idx]
+      @heap[parent], @heap[idx] = @heap[idx], @heap[parent]
+      idx = parent
+    end
+  end
+
+  def pop_heap
+    return if @heap.empty?
+    if @heap.size == 1
+      @heap.pop
+      return
+    end
+
+    @heap[0] = @heap.pop
+    idx = 0
+    while (left = 2 * idx + 1) < @heap.size
+      right = left + 1
+      child = right < @heap.size && @heap[right] < @heap[left] ? right : left
+      break if @heap[idx] <= @heap[child]
+      @heap[idx], @heap[child] = @heap[child], @heap[idx]
+      idx = child
+    end
+  end
+end
+
+
+
+
+class KthLargest
+  def initialize(k, nums)
+    @k = k
+    @arr = nums
+  end
+
+  def add(val)
+    # 1. 配列に値を追加
+    @arr << val
+    # 2. 小さい順にソート（Pythonのsort()と同じ）
+    @arr.sort!
+    # 3. 後ろからk番目の要素を返す
+    # (例: k=3なら、一番大きい, 2番目, 3番目...と数えて後ろから3つ目)
+    return @arr[-@k]
+  end
+end
